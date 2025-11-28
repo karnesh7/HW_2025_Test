@@ -46,6 +46,24 @@ public class PulpitManager : MonoBehaviour {
         if (activePulpits.Contains(p)) {
             activePulpits.Remove(p);
         }
+
+        // After removal, if we now have fewer than 2 pulpits, spawn replacement(s)
+        // Aim to restore count to 2 immediately (or as many as practical).
+        // If there is one remaining pulpit, spawn adjacent to it;
+        // if zero remain (edge case), spawn at origin.
+        int needed = 2 - activePulpits.Count;
+        for (int i = 0; i < needed; i++) {
+            if (activePulpits.Count == 0) {
+                // spawn a pulpit at origin
+                SpawnPulpitAt(new Vector3(0f, 0.1f, 0f));
+            } else if (activePulpits.Count == 1) {
+                // spawn adjacent to the single remaining pulpit
+                SpawnAdjacentTo(activePulpits[0]);
+            } else {
+                // already at or above desired count
+                break;
+            }
+        }
     }
 
     private void SpawnAdjacentTo(Pulpit source) {

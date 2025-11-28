@@ -239,7 +239,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pulpitPrefab: {fileID: 4170997006947679148, guid: 4cd8eac7ae62b4849804dbe25dc18e09, type: 3}
   pulpitParent: {fileID: 0}
-  step: 9
 --- !u!4 &536235722
 Transform:
   m_ObjectHideFlags: 0
@@ -550,7 +549,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 5300f4367b8614e4dbefd67fd622d924, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -590,7 +589,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

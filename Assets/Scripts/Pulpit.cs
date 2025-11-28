@@ -22,9 +22,18 @@ public class Pulpit : MonoBehaviour {
         float max = ConfigManager.Instance?.MaxPulpitDestroy ?? 5f;
 
         destroyTime = Random.Range(min, max);
-        spawnTrigger = Random.Range(min, max);
 
-        if (spawnTrigger > destroyTime) spawnTrigger = Random.Range(min, destroyTime);
+        // Use the pulpit_spawn_time from the JSON as the desired overlap window (lead time)
+        float desiredOverlap = ConfigManager.Instance?.PulpitSpawnTime ?? 2.5f;
+
+        // Choose spawnTrigger randomly, but ensure it occurs at least 'desiredOverlap' seconds before destroyTime.
+        // i.e. spawnTrigger <= destroyTime - desiredOverlap
+        float rawSpawn = Random.Range(min, max);
+        float latestAllowedSpawn = Mathf.Max(min, destroyTime - desiredOverlap); // don't go below min
+        spawnTrigger = Mathf.Min(rawSpawn, latestAllowedSpawn);
+
+        // As a final safety, clamp spawnTrigger to be within [min, destroyTime]
+        spawnTrigger = Mathf.Clamp(spawnTrigger, min, destroyTime);
 
         // If countdownLabel not set in prefab, try to find one
         if (countdownLabel == null) {
@@ -33,11 +42,6 @@ public class Pulpit : MonoBehaviour {
                 Debug.LogWarning("Pulpit: No TextMeshPro countdown label found in children.");
             }
         }
-        // ensure countdownLabel is laid flat on the platform (rigid)
-        if (countdownLabel != null) {
-            countdownLabel.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-        }
-
 
         StartCoroutine(LifecycleCoroutine());
     }
