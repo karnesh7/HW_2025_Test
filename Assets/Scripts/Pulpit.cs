@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(Collider))]
 public class Pulpit : MonoBehaviour {
@@ -9,48 +10,87 @@ public class Pulpit : MonoBehaviour {
     private bool spawnRequested = false;
     private float elapsed = 0f;
 
+    // Countdown UI (TextMeshPro - 3D)
+    [Header("UI")]
+    public TextMeshPro countdownLabel; // assign in prefab (child TextMeshPro)
+
+    // Keep track if player is currently on this pulpit
+    private bool playerOn = false;
+
     private void Start() {
-        // Get min/max from config (ConfigManager provides defaults)
         float min = ConfigManager.Instance?.MinPulpitDestroy ?? 4f;
         float max = ConfigManager.Instance?.MaxPulpitDestroy ?? 5f;
 
         destroyTime = Random.Range(min, max);
         spawnTrigger = Random.Range(min, max);
 
-        // Ensure spawnTrigger is not > destroyTime (optional). The assignment wording says spawnTrigger is random between y and z; it can be > destroy time — but that would never cause spawn.
-        // To ensure spawn happens before destroy in most cases, clamp spawnTrigger to be <= destroyTime:
         if (spawnTrigger > destroyTime) spawnTrigger = Random.Range(min, destroyTime);
 
-        // Start the self-destruction coroutine
+        // If countdownLabel not set in prefab, try to find one
+        if (countdownLabel == null) {
+            countdownLabel = GetComponentInChildren<TextMeshPro>();
+            if (countdownLabel == null) {
+                Debug.LogWarning("Pulpit: No TextMeshPro countdown label found in children.");
+            }
+        }
+
         StartCoroutine(LifecycleCoroutine());
     }
 
     private IEnumerator LifecycleCoroutine() {
         while (elapsed < destroyTime) {
             elapsed += Time.deltaTime;
+            float remaining = Mathf.Max(0f, destroyTime - elapsed);
 
-            // Request spawn only once when we reach spawnTrigger
+            // Update countdown UI (display to 1 decimal)
+            if (countdownLabel != null) {
+                countdownLabel.text = remaining.ToString("F1");
+                // optional: change color when low
+                if (remaining <= 1.5f) {
+                    countdownLabel.color = Color.red;
+                } else if (remaining <= 3f) {
+                    countdownLabel.color = Color.yellow;
+                } else {
+                    countdownLabel.color = Color.white;
+                }
+                // Make label face camera (billboard)
+                if (Camera.main != null) {
+                    countdownLabel.transform.rotation = Quaternion.LookRotation(countdownLabel.transform.position - Camera.main.transform.position);
+                }
+            }
+
             if (!spawnRequested && elapsed >= spawnTrigger) {
                 spawnRequested = true;
-                // Ask the manager to spawn adjacent to this pulpit (manager will check active count)
                 PulpitManager.Instance?.RequestSpawnAdjacent(this);
             }
 
             yield return null;
         }
 
-        // Lifetime finished — tell manager and destroy
+        // Lifetime finished — unregister and destroy
         PulpitManager.Instance?.UnregisterPulpit(this);
         Destroy(gameObject);
     }
 
-    // For safety, if pulpit is destroyed externally, ensure manager is updated
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Player")) {
+            // Mark player on this pulpit
+            playerOn = true;
+            // Inform ScoreManager that player stepped on this pulpit
+            ScoreManager.Instance?.RegisterStepOn(this);
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.CompareTag("Player")) {
+            playerOn = false;
+        }
+    }
+
     private void OnDestroy() {
-        // We already call Unregister before Destroy in coroutine; but in case Destroy is called elsewhere:
         if (PulpitManager.IsInitialized) PulpitManager.Instance?.UnregisterPulpit(this);
     }
 
-    // Helper: get pulpit center position
     public Vector3 CenterPosition() {
         return transform.position;
     }
