@@ -239,6 +239,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pulpitPrefab: {fileID: 4170997006947679148, guid: 4cd8eac7ae62b4849804dbe25dc18e09, type: 3}
   pulpitParent: {fileID: 0}
+  enforceMinSafeLifetime: 1
+  minSafeLifetime: 1
+  debugLogSeconds: 0
+  recentlyRemovedBlockDuration: 1.5
 --- !u!4 &536235722
 Transform:
   m_ObjectHideFlags: 0
@@ -901,8 +905,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618145329}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24878111, y: 0, z: 0, w: 0.96855974}
-  m_LocalPosition: {x: 0, y: 6.5, z: -10}
+  m_LocalRotation: {x: 0.29361743, y: 0, z: 0, w: 0.955923}
+  m_LocalPosition: {x: 0, y: 10.496292, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -965,7 +969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1325330343}
-  offset: {x: 0, y: 6, z: -10}
+  offset: {x: 0, y: 10, z: -14}
   followSpeed: 10
   lookAtTarget: 1
   minY: 1
