@@ -33,6 +33,11 @@ public class Pulpit : MonoBehaviour {
                 Debug.LogWarning("Pulpit: No TextMeshPro countdown label found in children.");
             }
         }
+        // ensure countdownLabel is laid flat on the platform (rigid)
+        if (countdownLabel != null) {
+            countdownLabel.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        }
+
 
         StartCoroutine(LifecycleCoroutine());
     }
@@ -54,9 +59,9 @@ public class Pulpit : MonoBehaviour {
                     countdownLabel.color = Color.white;
                 }
                 // Make label face camera (billboard)
-                if (Camera.main != null) {
-                    countdownLabel.transform.rotation = Quaternion.LookRotation(countdownLabel.transform.position - Camera.main.transform.position);
-                }
+                //if (Camera.main != null) {
+                //    countdownLabel.transform.rotation = Quaternion.LookRotation(countdownLabel.transform.position - Camera.main.transform.position);
+                //}
             }
 
             if (!spawnRequested && elapsed >= spawnTrigger) {
