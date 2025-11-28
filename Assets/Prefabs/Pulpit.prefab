@@ -186,6 +186,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4263173343034339045}
   - component: {fileID: 8467618101583154284}
+  - component: {fileID: 8768095364580434204}
+  - component: {fileID: 1954985128239208464}
   m_Layer: 0
   m_Name: PlayerTrigger
   m_TagString: Untagged
@@ -229,6 +231,31 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8768095364580434204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3633124561849232789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811ca3fb8b973e54eabeb556695d054f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pulpitParent: {fileID: 0}
+--- !u!114 &1954985128239208464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3633124561849232789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd0739cb5307514cbf68bd25497e4c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4170997006947679148
 GameObject:
   m_ObjectHideFlags: 0

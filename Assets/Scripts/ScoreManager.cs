@@ -7,7 +7,7 @@ public class ScoreManager : MonoBehaviour {
     [Header("UI")]
     public TextMeshProUGUI scoreText; // assign the ScoreText in the Canvas
 
-    private int score = 0;
+    private int score = -1;
 
     // Track the pulpit that was last stepped on (to avoid double counting)
     private Pulpit lastPulpit = null;

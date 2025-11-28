@@ -70,17 +70,41 @@ public class Pulpit : MonoBehaviour {
     }
 
     // Single OnTriggerEnter + OnTriggerExit pair (no duplicates)
+    // inside Pulpit.cs (replace existing OnTriggerEnter/Exit)
     private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player")) {
-            PlayerOn = true;
-            ScoreManager.Instance?.RegisterStepOn(this); // register once
+        if (!other.CompareTag("Player")) return;
+
+        // Debug log to confirm trigger fired and pulpit identity
+        Debug.Log($"Pulpit: OnTriggerEnter by Player at {transform.position} (instance id {GetInstanceID()})");
+
+        PlayerOn = true;
+
+        // Defensive: ensure ScoreManager exists
+        if (ScoreManager.Instance == null) {
+            Debug.LogWarning("Pulpit: ScoreManager.Instance is null — cannot register step.");
+        } else {
+            ScoreManager.Instance.RegisterStepOn(this);
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if (other.CompareTag("Player")) {
-            PlayerOn = false;
-        }
+        if (!other.CompareTag("Player")) return;
+        PlayerOn = false;
+        Debug.Log($"Pulpit: OnTriggerExit by Player at {transform.position}");
+    }
+
+    public void HandleTriggerEnterFromChild(Collider other) {
+        // reuse the same logic as OnTriggerEnter
+        if (!other.CompareTag("Player")) return;
+        PlayerOn = true;
+        Debug.Log($"Pulpit: OnTriggerEnter (forwarded) by Player at {transform.position} (instance id {GetInstanceID()})");
+        ScoreManager.Instance?.RegisterStepOn(this);
+    }
+
+    public void HandleTriggerExitFromChild(Collider other) {
+        if (!other.CompareTag("Player")) return;
+        PlayerOn = false;
+        Debug.Log($"Pulpit: OnTriggerExit (forwarded) by Player at {transform.position}");
     }
 
     // Removed OnDestroy Unregister to avoid double-unregisters (coroutine already does that)
